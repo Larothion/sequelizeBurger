@@ -1,0 +1,34 @@
+var db = require("../models");
+
+module.exports = function(app) {
+		app.get("/", function(req, res) {
+				res.render("index");
+		});
+
+		app.get("/burgers", function(req, res) {
+				db.BurgersTable.findAll({}).then(function(results) {
+					res.render("index", {burger_data: results})
+				});
+		});
+
+		app.post("/burgers/create", function(req, res) {
+				db.BurgersTable.create({
+					burger_name: req.body.burger_name
+				}).then(function(results) {
+						res.redirect("/burgers");
+				});
+
+		});
+
+		app.put("/burgers/update", function(req, res) {
+			db.BurgersTable.update({
+				devoured: true
+			}, {
+				where: {
+					id: req.body.burger_id
+				}
+			 }).then(function(results){
+				res.redirect("/burgers");
+			});
+		});
+	};
